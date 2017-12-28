@@ -2,7 +2,9 @@ import { nest } from 'd3-collection'
 export default class DataWorker {
   private ipData: any[] = []
   private result: any[] = []
-  constructor() {}
+  constructor() {
+    //
+  }
 
   public group(groupOn: string[], flat: boolean = false): DataWorker {
     if (this.ipData.length === 0) {
