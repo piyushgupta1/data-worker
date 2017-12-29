@@ -1,8 +1,12 @@
 {
   "name": "data-worker",
-  "version": "0.0.0-development",
-  "description": "",
-  "keywords": [],
+  "version": "1.0.1",
+  "description": "A simple project enabling some cool data operations on large arrays",
+  "keywords": [
+    "nest",
+    "data",
+    "group"
+  ],
   "main": "dist/data-worker.umd.js",
   "module": "dist/data-worker.es5.js",
   "typings": "dist/types/data-worker.d.ts",
