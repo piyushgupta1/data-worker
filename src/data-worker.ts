@@ -16,10 +16,10 @@ export default class DataWorker {
     }
 
     let tempResult = []
-    let nestObject = nest()
-    for (let i = 0; i < groupOn.length; i++) {
+    const nestObject = nest()
+    for (const key of groupOn) {
       nestObject.key((d: any) => {
-        return d[groupOn[i]]
+        return d[key]
       })
     }
     tempResult = nestObject.entries(this.ipData)
@@ -40,11 +40,7 @@ export default class DataWorker {
     return this.result
   }
 
-  private flattenObjects(
-    input: any[],
-    keys: string[],
-    returnMe: any[] = []
-  ): any[] {
+  private flattenObjects(input: any[], keys: string[], returnMe: any[] = []): any[] {
     keys.push('values')
     return this.parseOneArray(input, keys)
   }
@@ -56,11 +52,11 @@ export default class DataWorker {
     currentElement: any = {},
     returnArray: any[] = []
   ): any {
-    for (let i = 0; i < input.length; i++) {
-      if (input[i].hasOwnProperty('key') && input[i].hasOwnProperty('values')) {
-        currentElement[keys[currentDepth]] = input[i]['key']
+    for (const singleElement of input) {
+      if (singleElement.hasOwnProperty('key') && singleElement.hasOwnProperty('values')) {
+        currentElement[keys[currentDepth]] = singleElement['key']
         this.parseOneArray(
-          input[i]['values'],
+          singleElement['values'],
           keys,
           currentDepth + 1,
           currentElement,
