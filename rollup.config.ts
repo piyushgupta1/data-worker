@@ -1,25 +1,27 @@
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
-import sourceMaps from 'rollup-plugin-sourcemaps'
-import camelCase from 'lodash.camelcase'
+import camelCase from 'lodash.camelcase';
+import commonjs from 'rollup-plugin-commonjs';
+import builtins from 'rollup-plugin-node-builtins';
+import resolve from 'rollup-plugin-node-resolve';
+import sourceMaps from 'rollup-plugin-sourcemaps';
 
 const pkg = require('./package.json')
 
 const libraryName = 'data-worker'
 
 export default {
+  external: [
+    'd3-collection',
+    // 'util'
+  ],
+  globals: { 'd3-collection': 'd3-collection' },
   input: `dist/es/${libraryName}.js`,
   output: [
     { file: pkg.main, name: camelCase(libraryName), format: 'umd' },
     { file: pkg.module, format: 'es' },
   ],
-  sourcemap: true,
-  // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: [],
-  watch: {
-    include: 'dist/es/**',
-  },
   plugins: [
+    // roll node builtin shims
+    builtins(),
     // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
     commonjs(),
     // Allow node_modules resolution, so you can use 'external' to control
@@ -30,4 +32,10 @@ export default {
     // Resolve source maps to the original source
     sourceMaps(),
   ],
+  sourcemap: true,
+  // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
+  watch: {
+    include: 'dist/es/**',
+  },
+
 }
