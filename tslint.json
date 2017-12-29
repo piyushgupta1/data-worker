@@ -17,7 +17,7 @@
       true,
       {
         "multiline": {
-          "objects": "always",
+          "objects": "ignore",
           "arrays": "ignore",
           "functions": "never",
           "typeLiterals": "ignore"
@@ -25,6 +25,7 @@
         "esSpecCompliant": true
       }
     ],
-    "no-string-literal": false
+    "no-string-literal": false,
+    "object-literal-sort-keys": false
   }
 }
