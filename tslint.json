@@ -10,7 +10,7 @@
       "avoid-template"
     ],
     "semicolon": [
-      true,
+      false,
       "never"
     ],
     "trailing-comma": [

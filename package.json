@@ -98,6 +98,7 @@
     "rimraf": "^2.6.1",
     "rollup": "^0.53.1",
     "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
     "semantic-release": "^11.0.2",
