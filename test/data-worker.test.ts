@@ -1,6 +1,6 @@
 import DataWorker from '../src/data-worker'
 
-let sampleData = [
+const sampleData = [
   { dep: 'First Top', name: 'First child', model: 'value1', size: '320' },
   { dep: 'First Top', name: 'First child', model: 'value2', size: '320' },
   { dep: 'First Top', name: 'First child', model: 'value3', size: '320' },
