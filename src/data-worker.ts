@@ -1,7 +1,7 @@
 import { nest } from 'd3-collection'
 
-import { IAggregatorArrayModeInput, IAggregatorMapModeInput } from '../dist/types/interface'
 import { AggregatorMode } from './enum'
+import { IAggregatorArrayModeInput, IAggregatorMapModeInput } from './interface'
 import { mean, nanMean, sum } from './operators'
 
 export class DataWorker {
