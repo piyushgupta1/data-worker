@@ -11,9 +11,12 @@ const libraryName = 'data-worker'
 export default {
   external: [
     'd3-collection',
-    // 'util'
+    'd3-array',
   ],
-  globals: { 'd3-collection': 'd3-collection' },
+  globals: {
+    'd3-collection': 'd3-collection',
+    'd3-array': 'd3-array'
+  },
   input: `dist/es/${libraryName}.js`,
   output: [
     { file: pkg.main, name: camelCase(libraryName), format: 'umd' },
@@ -21,7 +24,7 @@ export default {
   ],
   plugins: [
     // roll node builtin shims
-    builtins(),
+    // builtins(),
     // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
     commonjs(),
     // Allow node_modules resolution, so you can use 'external' to control
