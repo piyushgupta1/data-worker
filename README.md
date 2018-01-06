@@ -1,4 +1,6 @@
 # Data Manipulation Lib written in Typescript
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/piyushgupta1/data-worker.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/piyushgupta1/data-worker.svg?branch=master)](https://travis-ci.org/piyushgupta1/data-worker)
 [![npm version](https://badge.fury.io/js/data-worker.svg)](https://badge.fury.io/js/data-worker)
 [![dependencies Status](https://david-dm.org/piyushgupta1/data-worker/status.svg)](https://david-dm.org/piyushgupta1/data-worker)
