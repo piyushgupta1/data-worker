@@ -45,6 +45,19 @@
             "git add"
         ]
     },
+    "release": {
+        "analyzeCommits": {
+            "preset": "angular",
+            "releaseRules": [
+                { "type": "docs", "scope": "readme", "release": "patch" },
+                { "type": "refactor", "release": "patch" },
+                { "type": "style", "release": "patch" }
+            ],
+            "parserOpts": {
+                "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
+            }
+        }
+    },
     "config": {
         "commitizen": {
             "path": "node_modules/cz-conventional-changelog"
