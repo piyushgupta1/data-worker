@@ -1,5 +1,8 @@
-import { DataWorker } from '../src/data-worker'
-import { AggregatorMode, GroupingMode, Operation, SortingMode } from '../src/enum'
+import { AggregatorMode, GroupingMode, Operation, SortingMode } from '../src/@enums/enum'
+import { dw } from '../src/data-worker'
+
+// import { DataWorker } from '../src/data-worker'
+// import { AggregatorMode, GroupingMode, Operation, SortingMode } from '../src/enum'
 
 // tslint:disable-next-line:no-var-requires
 const sampleData = require('./sampleData.json')
@@ -9,42 +12,32 @@ describe('DataWorker test', () => {
     expect(true).toBeTruthy()
   })
 
-  it('DataWorker is instantiable', () => {
-    expect(new DataWorker()).toBeInstanceOf(DataWorker)
-  })
-
   it('Should correctly group object with result having 3 length', () => {
-    const dw = new DataWorker()
     expect(
       dw
-        .input(sampleData)
         .group({
           mode: GroupingMode.ONLY_GROUP,
           flat: false,
           groupOn: ['dep', 'name']
         })
-        .complete().length
+        .execute(sampleData).length
     ).toBe(3)
   })
 
   it('Should correctly group object {flat=true} with result having 6 length', () => {
-    const dw = new DataWorker()
     expect(
       dw
-        .input(sampleData)
         .group({
           mode: GroupingMode.ONLY_GROUP,
           flat: true,
           groupOn: ['dep', 'name']
         })
-        .complete().length
+        .execute(sampleData).length
     ).toBe(6)
   })
 
   it('Should correctly group object {flat=false} with sorting and result having 6 length', () => {
-    const dw = new DataWorker()
     const result = dw
-      .input(sampleData)
       .group({
         mode: GroupingMode.GROUP_SORT,
         flat: false,
@@ -53,16 +46,14 @@ describe('DataWorker test', () => {
           { sortMode: SortingMode.DSC, attribute: 'name' }
         ]
       })
-      .complete()
+      .execute(sampleData)
     expect(result.length).toBe(3)
     expect(result[0]['key']).toBe('First Top')
     expect(result[0]['values'][0]['key']).toBe('SECOND CHILD')
   })
 
   it('Should correctly group object {flat=false} with sorting and result having 6 length', () => {
-    const dw = new DataWorker()
     const result = dw
-      .input(sampleData)
       .group({
         mode: GroupingMode.GROUP_SORT,
         flat: false,
@@ -71,16 +62,14 @@ describe('DataWorker test', () => {
           { sortMode: SortingMode.ASC, attribute: 'name' }
         ]
       })
-      .complete()
+      .execute(sampleData)
     expect(result.length).toBe(3)
     expect(result[0]['key']).toBe('Third Top')
     expect(result[0]['values'][0]['key']).toBe('First Child')
   })
 
   it('should apply multiple aggregate data correctly', () => {
-    const dw = new DataWorker()
     const result = dw
-      .input(sampleData)
       .group({
         mode: GroupingMode.GROUP_SORT,
         flat: false,
@@ -91,13 +80,11 @@ describe('DataWorker test', () => {
         attrs: ['size1'],
         mode: AggregatorMode.ARRAY_MODE
       })
-      .complete()
+      .execute(sampleData)
   })
 
   it('should apply multiple aggregate data correctly', () => {
-    const dw = new DataWorker()
     const result = dw
-      .input(sampleData)
       .group({
         mode: GroupingMode.GROUP_SORT,
         flat: true,
@@ -108,38 +95,33 @@ describe('DataWorker test', () => {
         attrs: ['size1'],
         mode: AggregatorMode.ARRAY_MODE
       })
-      .complete()
+      .execute(sampleData)
   })
 
   it('should apply multiple aggregate data correctly', () => {
-    const dw = new DataWorker()
     const map: Map<string, Operation[]> = new Map()
     map.set('size', [Operation.STDEV, Operation.MEDIAN, Operation.VARIANCE])
     const result = dw
-      .input(sampleData)
       .aggregate({
         attrToAggrMap: map,
         mode: AggregatorMode.MAP_MODE
       })
-      .complete()
+      .execute(sampleData)
   })
 
   it('should apply multiple aggregate data correctly', () => {
-    const dw = new DataWorker()
     const result = dw
-      .input(sampleData)
       .aggregate({
         aggr: [Operation.AVERAGE, Operation.SUM],
         attrs: ['size1'],
         mode: AggregatorMode.ARRAY_MODE
       })
-      .complete()
+      .execute(sampleData)
   })
 })
 
 describe('DataWorker Error throw test', () => {
   it('Should throw error when no data present and group is attempted', () => {
-    const dw = new DataWorker()
     expect(() => {
       dw
         .group({
@@ -147,7 +129,7 @@ describe('DataWorker Error throw test', () => {
           flat: false,
           groupOn: ['dep', 'name']
         })
-        .complete()
+        .execute([])
     }).toThrow(EvalError)
 
     expect(() => {
@@ -157,82 +139,73 @@ describe('DataWorker Error throw test', () => {
           flat: false,
           groupOn: ['dep', 'name']
         })
-        .complete()
+        .execute([])
     }).toThrowError('Empty data to group not allowed')
   })
 
   it('Should throw error when no grouping attribute present and group is attempted (Group Only)', () => {
-    const dw = new DataWorker()
     expect(() => {
       dw
-        .input(sampleData)
         .group({
           mode: GroupingMode.ONLY_GROUP,
           flat: false,
           groupOn: []
         })
-        .complete()
+        .execute(sampleData)
     }).toThrow(EvalError)
 
     expect(() => {
       dw
-        .input(sampleData)
         .group({
           mode: GroupingMode.ONLY_GROUP,
           flat: false,
           groupOn: []
         })
-        .complete()
+        .execute(sampleData)
     }).toThrowError('Empty parameter to group not allowed')
   })
 
   it('Should throw error when no grouping attribute present and group is attempted (Group Sort Mode)', () => {
-    const dw = new DataWorker()
     expect(() => {
       dw
-        .input(sampleData)
         .group({
           mode: GroupingMode.GROUP_SORT,
           flat: false,
           groupingOptions: []
         })
-        .complete()
+        .execute(sampleData)
     }).toThrow(EvalError)
 
     expect(() => {
       dw
-        .input(sampleData)
         .group({
           mode: GroupingMode.GROUP_SORT,
           flat: false,
           groupingOptions: []
         })
-        .complete()
+        .execute(sampleData)
     }).toThrowError('Empty parameter to group not allowed')
   })
 
   it('Should throw error when invalid group mode is supplied and group is attempted', () => {
-    const dw = new DataWorker()
     expect(() => {
       dw
-        .input(sampleData)
         .group({
           mode: 5,
           flat: false,
           groupingOptions: []
         })
-        .complete()
+        .execute(sampleData)
     }).toThrow(EvalError)
 
     expect(() => {
       dw
-        .input(sampleData)
         .group({
           mode: 5,
           flat: false,
           groupingOptions: []
         })
-        .complete()
+        .execute(sampleData)
     }).toThrowError('InValid Grouping Mode')
   })
 })
