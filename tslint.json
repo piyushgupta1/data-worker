@@ -28,6 +28,8 @@
         "no-string-literal": false,
         "object-literal-sort-keys": false,
         "arrow-parens": false,
-        "variable-name": false
+        "variable-name": false,
+        "space-before-function-paren": false,
+        "align": false
     }
 }
