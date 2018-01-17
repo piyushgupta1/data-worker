@@ -10,3 +10,8 @@ export interface IDataWorker {
   aggregate: IAggregateInterface
   execute: IExecute
 }
+
+export interface IFunctionWithArgs {
+  func: any
+  args: any[]
+}
