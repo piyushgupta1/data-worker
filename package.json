@@ -25,7 +25,7 @@
     "scripts": {
         "lint": "tslint -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
         "prebuild": "rimraf dist",
-        "build": "tsc && tsc --module commonjs --outDir dist/lib && rollup -c rollup.config.ts && typedoc --out dist/docs --target es6 --excludePrivate --excludeExternals --includeDeclarations --theme minimal --mode file src --module umd",
+        "build": "tsc && tsc --module commonjs --outDir dist/lib && rollup -c rollup.config.ts && typedoc --out dist/docs --target es6  src --mode modules --exclude \"**/main/*.ts\" --excludeExternals --module commonjs",
         "start": "tsc -w & rollup -c rollup.config.ts -w",
         "test": "jest",
         "test:watch": "jest --watch",
