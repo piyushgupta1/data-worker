@@ -15,7 +15,7 @@ _aggregate = (
   aggregatorOptions: IAggregatorArrayModeInput | IAggregatorMapModeInput
 ): IDataWorkerBase => {
   if (_this.result.length === 0) {
-    throw TypeError('No Data Present')
+    throw EvalError('Empty data to aggregate not allowed')
   }
 
   const mode = aggregatorOptions.mode
@@ -23,11 +23,11 @@ _aggregate = (
   if (mode === AggregatorMode.ARRAY_MODE) {
     aggregatorOptions = aggregatorOptions as IAggregatorArrayModeInput
     if (aggregatorOptions.attrs.length === 0) {
-      throw TypeError('Must give one attribute when using Array mode')
+      throw EvalError('Must give one attribute when using Array mode')
     }
 
     if (aggregatorOptions.aggr.length === 0) {
-      throw TypeError('Must give one aggregator when using Array mode')
+      throw EvalError('Must give one aggregator when using Array mode')
     }
     for (const attr of aggregatorOptions.attrs) {
       finalAttrToAggrMap.set(attr, aggregatorOptions.aggr)
@@ -61,16 +61,14 @@ function _putAggregationOnNestedResult(
 ) {
   for (const singleElement of inputData) {
     if (singleElement.hasOwnProperty('key') && singleElement.hasOwnProperty('values')) {
-      if (singleElement.values.length > 0) {
-        if (!singleElement.values[0].hasOwnProperty('values')) {
-          Object.assign(
-            singleElement,
-            _createTempAggregationObject(finalAttrToAggrMap, singleElement.values)
-          )
-          delete singleElement.values
-        } else {
-          _putAggregationOnNestedResult(singleElement.values, finalAttrToAggrMap)
-        }
+      if (!singleElement.values[0].hasOwnProperty('values')) {
+        Object.assign(
+          singleElement,
+          _createTempAggregationObject(finalAttrToAggrMap, singleElement.values)
+        )
+        delete singleElement.values
+      } else {
+        _putAggregationOnNestedResult(singleElement.values, finalAttrToAggrMap)
       }
     }
   }
@@ -132,7 +130,7 @@ function _oneAttrOneAggr(input: any[], attr: string, aggr: Operation): number {
   }
 
   if (result === undefined) {
-    throw Error()
+    throw EvalError()
   }
 
   result = result as number
