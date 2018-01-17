@@ -1,9 +1,6 @@
 import { AggregatorMode, GroupingMode, Operation, SortingMode } from '../src/@enums/enum'
 import { dw } from '../src/data-worker'
 
-// import { DataWorker } from '../src/data-worker'
-// import { AggregatorMode, GroupingMode, Operation, SortingMode } from '../src/enum'
-
 // tslint:disable-next-line:no-var-requires
 const sampleData = require('./sampleData.json')
 
@@ -73,7 +70,10 @@ describe('DataWorker test', () => {
       .group({
         mode: GroupingMode.GROUP_SORT,
         flat: false,
-        groupingOptions: [{ sortMode: SortingMode.ASC, attribute: 'dep' }]
+        groupingOptions: [
+          { sortMode: SortingMode.ASC, attribute: 'dep' },
+          { sortMode: SortingMode.ASC, attribute: 'name' }
+        ]
       })
       .aggregate({
         aggr: [Operation.AVERAGE, Operation.SUM, Operation.MAXIMUM, Operation.MINIMUN],
@@ -141,6 +141,28 @@ describe('DataWorker Error throw test', () => {
         })
         .execute([])
     }).toThrowError('Empty data to group not allowed')
+  })
+
+  it('Should throw error when no data present and aggregate is attempted', () => {
+    expect(() => {
+      dw
+        .aggregate({
+          aggr: [Operation.AVERAGE, Operation.SUM],
+          attrs: ['size1'],
+          mode: AggregatorMode.ARRAY_MODE
+        })
+        .execute([])
+    }).toThrow(EvalError)
+
+    expect(() => {
+      dw
+        .aggregate({
+          aggr: [Operation.AVERAGE, Operation.SUM],
+          attrs: ['size1'],
+          mode: AggregatorMode.ARRAY_MODE
+        })
+        .execute([])
+    }).toThrowError('Empty data to aggregate not allowed')
   })
 
   it('Should throw error when no grouping attribute present and group is attempted (Group Only)', () => {
