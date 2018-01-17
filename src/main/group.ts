@@ -64,7 +64,7 @@ _group = (_this: IDataWorkerBase, options: IGroupOnlyMode | IGroupSortingMode): 
     throw EvalError('InValid Grouping Mode')
   }
   _this.misc['groupApplied'] = true
-  _this.misc['nestApplied'] = !options.flat
+  _this.misc['nestingApplied'] = !options.flat
   _this.result = result
   return _this
 }
