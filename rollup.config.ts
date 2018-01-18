@@ -1,9 +1,10 @@
 import camelCase from 'lodash.camelcase';
 import commonjs from 'rollup-plugin-commonjs';
-import builtins from 'rollup-plugin-node-builtins';
+// import builtins from 'rollup-plugin-node-builtins';
 import resolve from 'rollup-plugin-node-resolve';
 import sourceMaps from 'rollup-plugin-sourcemaps';
-
+import uglify from 'rollup-plugin-uglify';
+import { minify } from 'uglify-es'
 const pkg = require('./package.json')
 
 const libraryName = 'data-worker'
@@ -34,6 +35,21 @@ export default {
 
     // Resolve source maps to the original source
     sourceMaps(),
+    uglify({
+      ie8: false,
+      mangle: {
+        toplevel: true,
+        keep_classnames: false
+      },
+      compress: {
+        passes: 3,
+        keep_fnames: false,
+        warnings: true
+      },
+      output: {
+        comments: false
+      }
+    }, minify)
   ],
   sourcemap: true,
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')

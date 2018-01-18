@@ -28,45 +28,42 @@ let _group: IGroupInnerInterface
  * @returns this
  */
 _group = (_this: IDataWorkerBase, options: IGroupOnlyMode | IGroupSortingMode): IDataWorkerBase => {
-  // Check Data Input
-  let result: any[] = []
   if (_this.result.length === 0) {
     throw new EvalError('Empty data to group not allowed')
   }
-
-  // Check Mode for grouping
-  const mode = options.mode
-  if (mode === GroupingMode.ONLY_GROUP) {
-    options = options as IGroupOnlyMode
-
-    // Validations in case Group only mode is used
-    if (options.groupOn.length === 0) {
-      throw EvalError('Empty parameter to group not allowed')
-    }
-
-    result = _putGroupingOnInput(
-      options.flat,
-      options.groupOn.map(item => {
-        return { sortMode: SortingMode.NONE, attribute: item }
-      }),
-      _this.result
-    )
-  } else if (mode === GroupingMode.GROUP_SORT) {
-    options = options as IGroupSortingMode
-
-    // Validations in case Group-Sort mode is used
-    if (options.groupingOptions.length === 0) {
-      throw EvalError('Empty parameter to group not allowed')
-    }
-    result = _putGroupingOnInput(options.flat, options.groupingOptions, _this.result)
+  if (options.mode === GroupingMode.ONLY_GROUP) {
+    _this.result = _groupOnlyMode(_this, options as IGroupOnlyMode)
+  } else if (options.mode === GroupingMode.GROUP_SORT) {
+    _this.result = _groupSortMode(_this, options as IGroupSortingMode)
   } else {
-    // Throw error if invalid option is used
     throw EvalError('InValid Grouping Mode')
   }
   _this.misc['groupApplied'] = true
   _this.misc['nestingApplied'] = !options.flat
-  _this.result = result
   return _this
+}
+
+function _groupOnlyMode(_this: IDataWorkerBase, options: IGroupOnlyMode): any[] {
+  // Validations in case Group only mode is used
+  if (options.groupOn.length === 0) {
+    throw EvalError('Empty parameter to group not allowed')
+  }
+
+  return _putGroupingOnInput(
+    options.flat,
+    options.groupOn.map(item => {
+      return { sortMode: SortingMode.NONE, attribute: item }
+    }),
+    _this.result
+  )
+}
+
+function _groupSortMode(_this: IDataWorkerBase, options: IGroupSortingMode): any[] {
+  // Validations in case Group-Sort mode is used
+  if (options.groupingOptions.length === 0) {
+    throw EvalError('Empty parameter to group not allowed')
+  }
+  return _putGroupingOnInput(options.flat, options.groupingOptions, _this.result)
 }
 
 function _putGroupingOnInput(flat: boolean, groupOnMapping: IAttrSortingMode[], input: any[]) {
@@ -86,11 +83,7 @@ function _putGroupingOnInput(flat: boolean, groupOnMapping: IAttrSortingMode[], 
   })
 
   tempResult = nestObject.entries(input)
-  if (flat) {
-    return _flattenObjects(tempResult, groupOn)
-  } else {
-    return tempResult
-  }
+  return flat ? _flattenObjects(tempResult, groupOn) : tempResult
 }
 
 function _flattenObjects(input: any[], keys: string[]): any[] {

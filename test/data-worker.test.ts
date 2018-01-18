@@ -230,4 +230,70 @@ describe('DataWorker Error throw test', () => {
         .execute(sampleData)
     }).toThrowError('InValid Grouping Mode')
   })
+
+  it('Should throw error when invalid aggregate is attempted', () => {
+    expect(() => {
+      dw
+        .aggregate({
+          aggr: [99, Operation.SUM],
+          attrs: ['size1'],
+          mode: AggregatorMode.ARRAY_MODE
+        })
+        .execute(sampleData)
+    }).toThrow(TypeError)
+
+    expect(() => {
+      dw
+        .aggregate({
+          aggr: [99, Operation.SUM],
+          attrs: ['size1'],
+          mode: AggregatorMode.ARRAY_MODE
+        })
+        .execute(sampleData)
+    }).toThrowError('Unsupported Operation')
+  })
+
+  it('Should throw error when empty parameter in aggregate is attempted', () => {
+    expect(() => {
+      dw
+        .aggregate({
+          aggr: [Operation.SUM],
+          attrs: [],
+          mode: AggregatorMode.ARRAY_MODE
+        })
+        .execute(sampleData)
+    }).toThrow(EvalError)
+
+    expect(() => {
+      dw
+        .aggregate({
+          aggr: [Operation.SUM],
+          attrs: [],
+          mode: AggregatorMode.ARRAY_MODE
+        })
+        .execute(sampleData)
+    }).toThrowError('Must give one attribute when using Array mode')
+  })
+
+  it('Should throw error when empty aggregator in aggregate is attempted', () => {
+    expect(() => {
+      dw
+        .aggregate({
+          aggr: [],
+          attrs: ['size1'],
+          mode: AggregatorMode.ARRAY_MODE
+        })
+        .execute(sampleData)
+    }).toThrow(EvalError)
+
+    expect(() => {
+      dw
+        .aggregate({
+          aggr: [],
+          attrs: ['size1'],
+          mode: AggregatorMode.ARRAY_MODE
+        })
+        .execute(sampleData)
+    }).toThrowError('Must give one aggregator when using Array mode')
+  })
 })
