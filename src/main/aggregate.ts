@@ -7,7 +7,7 @@ import {
 } from '../@interfaces/aggregator-interface'
 import { IDataWorker, IDataWorkerBase } from '../@interfaces/data-worker-interface'
 import { IAggregateInnerInterface } from '../@types/types'
-
+import { operationDictionary } from './operationMap'
 let _aggregate: IAggregateInnerInterface
 
 _aggregate = (
@@ -18,41 +18,51 @@ _aggregate = (
     throw EvalError('Empty data to aggregate not allowed')
   }
 
-  const mode = aggregatorOptions.mode
   let finalAttrToAggrMap = new Map<string, Operation[]>()
-  if (mode === AggregatorMode.ARRAY_MODE) {
-    aggregatorOptions = aggregatorOptions as IAggregatorArrayModeInput
-    if (aggregatorOptions.attrs.length === 0) {
-      throw EvalError('Must give one attribute when using Array mode')
-    }
-
-    if (aggregatorOptions.aggr.length === 0) {
-      throw EvalError('Must give one aggregator when using Array mode')
-    }
-    for (const attr of aggregatorOptions.attrs) {
-      finalAttrToAggrMap.set(attr, aggregatorOptions.aggr)
-    }
+  if (aggregatorOptions.mode === AggregatorMode.ARRAY_MODE) {
+    finalAttrToAggrMap = _aggregatorArrayMode(aggregatorOptions as IAggregatorArrayModeInput)
   } else {
     aggregatorOptions = aggregatorOptions as IAggregatorMapModeInput
     finalAttrToAggrMap = aggregatorOptions.attrToAggrMap
   }
-  if (_this.misc.groupApplied) {
-    if (_this.misc.nestingApplied) {
-      _putAggregationOnNestedResult(_this.result, finalAttrToAggrMap)
-    } else {
-      for (const singleElement of _this.result) {
-        Object.assign(
-          singleElement,
-          _createTempAggregationObject(finalAttrToAggrMap, singleElement.values)
-        )
-        delete singleElement.values
-      }
-    }
-  } else {
-    _this.result = _createTempAggregationObject(finalAttrToAggrMap, _this.result)
+  _this.result = _this.misc.groupApplied
+    ? _handleNestingAggregation(_this.misc.nestingApplied, _this.result, finalAttrToAggrMap)
+    : _createTempAggregationObject(finalAttrToAggrMap, _this.result)
+  return _this
+}
+
+function _aggregatorArrayMode(aggregatorOptions: IAggregatorArrayModeInput) {
+  const finalAttrToAggrMap = new Map<string, Operation[]>()
+  if (aggregatorOptions.attrs.length === 0) {
+    throw EvalError('Must give one attribute when using Array mode')
   }
 
-  return _this
+  if (aggregatorOptions.aggr.length === 0) {
+    throw EvalError('Must give one aggregator when using Array mode')
+  }
+  for (const attr of aggregatorOptions.attrs) {
+    finalAttrToAggrMap.set(attr, aggregatorOptions.aggr)
+  }
+  return finalAttrToAggrMap
+}
+
+function _handleNestingAggregation(
+  nestingApplied: boolean,
+  inputData: any[],
+  finalAttrToAggrMap: Map<string, Operation[]>
+): any[] {
+  if (nestingApplied) {
+    _putAggregationOnNestedResult(inputData, finalAttrToAggrMap)
+  } else {
+    for (const singleElement of inputData) {
+      Object.assign(
+        singleElement,
+        _createTempAggregationObject(finalAttrToAggrMap, singleElement.values)
+      )
+      delete singleElement.values
+    }
+  }
+  return inputData
 }
 
 function _putAggregationOnNestedResult(
@@ -90,47 +100,10 @@ function _createTempAggregationObject(
 function _oneAttrOneAggr(input: any[], attr: string, aggr: Operation): number {
   input = input.map(item => item[attr])
   let result: number | undefined
-  switch (aggr) {
-    case Operation.NANMEAN:
-      result = mean(input)
-      break
-    case Operation.MEAN:
-      result = mean(input)
-      break
-    case Operation.AVERAGE:
-      result = mean(input)
-      break
-    case Operation.SUM:
-      result = sum(input)
-      break
-    case Operation.MINIMUN:
-      result = min(input)
-      break
-    case Operation.MAXIMUM:
-      result = max(input)
-      break
-    case Operation.MEDIAN:
-      result = median(input)
-      break
-    case Operation.VARIANCE:
-      result = variance(input)
-      break
-    case Operation.Q3:
-      result = quantile(input, 0.75)
-      break
-    case Operation.Q1:
-      result = quantile(input, 0.25)
-      break
-    case Operation.STDEV:
-      result = deviation(input)
-      break
-
-    default:
-      throw TypeError('Unsupported Operation')
-  }
-
-  if (result === undefined) {
-    throw EvalError()
+  if (operationDictionary.has(aggr)) {
+    result = operationDictionary.get(aggr)(input)
+  } else {
+    throw TypeError('Unsupported Operation')
   }
 
   result = result as number
