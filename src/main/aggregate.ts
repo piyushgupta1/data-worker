@@ -70,16 +70,14 @@ function _putAggregationOnNestedResult(
   finalAttrToAggrMap: Map<string, Operation[]>
 ) {
   for (const singleElement of inputData) {
-    if (singleElement.hasOwnProperty('key') && singleElement.hasOwnProperty('values')) {
-      if (!singleElement.values[0].hasOwnProperty('values')) {
-        Object.assign(
-          singleElement,
-          _createTempAggregationObject(finalAttrToAggrMap, singleElement.values)
-        )
-        delete singleElement.values
-      } else {
-        _putAggregationOnNestedResult(singleElement.values, finalAttrToAggrMap)
-      }
+    if (!singleElement.values[0].hasOwnProperty('values')) {
+      Object.assign(
+        singleElement,
+        _createTempAggregationObject(finalAttrToAggrMap, singleElement.values)
+      )
+      delete singleElement.values
+    } else {
+      _putAggregationOnNestedResult(singleElement.values, finalAttrToAggrMap)
     }
   }
 }
