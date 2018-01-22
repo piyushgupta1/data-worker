@@ -5,7 +5,10 @@
     "keywords": [
         "nest",
         "data",
-        "group"
+        "group",
+        "data",
+        "statistics",
+        "json"
     ],
     "main": "dist/data-worker.umd.js",
     "module": "dist/data-worker.es5.js",
@@ -48,8 +51,7 @@
     "release": {
         "analyzeCommits": {
             "preset": "angular",
-            "releaseRules": [
-                {
+            "releaseRules": [{
                     "type": "docs",
                     "scope": "readme",
                     "release": "patch"
