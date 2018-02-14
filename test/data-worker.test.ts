@@ -1,5 +1,5 @@
 import { AggregatorMode, GroupingMode, Operation, SortingMode } from '../src/@enums/enum'
-import { dw } from '../src/data-worker'
+import dw from '../src/data-worker'
 
 // tslint:disable-next-line:no-var-requires
 const sampleData = require('./sampleData.json')
