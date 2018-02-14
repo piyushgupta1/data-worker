@@ -44,4 +44,4 @@ complete = (inputData: any[]) => {
 }
 const dw: IDataWorker = { group: groupBy, aggregate: aggregateBy, execute: complete }
 
-export { dw }
+export default dw
