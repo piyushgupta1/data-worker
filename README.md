@@ -16,7 +16,7 @@ A simple project enabling some cool data operations on large arrays
 npm install data-worker
 
 # Import Data worker in yout project
-import DataWorker from 'data-worker';
+import dw from 'data-worker';
 ```
 
 ### Features
