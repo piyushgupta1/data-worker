@@ -127,7 +127,7 @@
         "replace-in-file": "^3.1.0",
         "rimraf": "^2.6.1",
         "rollup": "^0.56.1",
-        "rollup-plugin-commonjs": "^8.2.6",
+        "rollup-plugin-commonjs": "^9.0.0",
         "rollup-plugin-node-builtins": "^2.1.2",
         "rollup-plugin-node-resolve": "^3.0.0",
         "rollup-plugin-sourcemaps": "^0.4.2",
@@ -136,7 +136,7 @@
         "ts-jest": "^22.0.0",
         "ts-node": "^5.0.0",
         "tslint": "^5.8.0",
-        "typedoc": "^0.10.0",
+        "typedoc": "^0.11.0",
         "typescript": "^2.6.2",
         "uglify-es": "^3.3.7",
         "validate-commit-msg": "^2.12.2"
