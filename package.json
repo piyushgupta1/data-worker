@@ -111,7 +111,7 @@
     "devDependencies": {
         "@types/d3-array": "^1.2.1",
         "@types/d3-collection": "^1.0.5",
-        "@types/jest": "^22.0.1",
+        "@types/jest": "^23.0.0",
         "@types/node": "^10.0.7",
         "colors": "^1.1.2",
         "commitizen": "^2.9.6",
