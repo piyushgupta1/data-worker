@@ -13,6 +13,7 @@ node_js:
   - node
   - lts/*
 script:
+  - npm install
   - npm run test:prod && npm run build
 after_success:
   - npm run report-coverage
