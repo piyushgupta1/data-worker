@@ -11,7 +11,6 @@ notifications:
   email: false
 node_js:
   - node
-  - lts/*
 script:
   - npm run test:prod && npm run build
 after_success:

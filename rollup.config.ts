@@ -1,10 +1,12 @@
 import camelCase from 'lodash.camelcase';
+import { rollup } from 'rollup';
 import commonjs from 'rollup-plugin-commonjs';
 // import builtins from 'rollup-plugin-node-builtins';
 import resolve from 'rollup-plugin-node-resolve';
 import sourceMaps from 'rollup-plugin-sourcemaps';
-import uglify from 'rollup-plugin-uglify';
+import { uglify } from 'rollup-plugin-uglify';
 import { minify } from 'uglify-es'
+// tslint:disable-next-line:no-var-requires
 const pkg = require('./package.json')
 
 const libraryName = 'data-worker'
