@@ -1,3 +1,4 @@
+import { AggregatorMode, GroupingMode, Operation, SortingMode } from './@enums/enum'
 import {
   IAggregatorArrayModeInput,
   IAggregatorMapModeInput
@@ -44,4 +45,9 @@ complete = (inputData: any[]) => {
 }
 const dw: IDataWorker = { group: groupBy, aggregate: aggregateBy, execute: complete }
 
-export default dw
+export { dw }
+export { IAggregatorArrayModeInput, IAggregatorMapModeInput }
+export { IDataWorker, IDataWorkerBase, IFunctionWithArgs }
+export { IGroupOnlyMode, IGroupSortingMode }
+export { IAggregateInterface, IExecute, IGroupInterface }
+export { GroupingMode, AggregatorMode, SortingMode, Operation }

@@ -1,5 +1,4 @@
-import { AggregatorMode, GroupingMode, Operation, SortingMode } from '../src/@enums/enum'
-import dw from '../src/data-worker'
+import { AggregatorMode, dw, GroupingMode, Operation, SortingMode } from '../src/data-worker'
 
 // tslint:disable-next-line:no-var-requires
 const sampleData = require('./sampleData.json')
@@ -123,177 +122,145 @@ describe('DataWorker test', () => {
 describe('DataWorker Error throw test', () => {
   it('Should throw error when no data present and group is attempted', () => {
     expect(() => {
-      dw
-        .group({
-          mode: GroupingMode.ONLY_GROUP,
-          flat: false,
-          groupOn: ['dep', 'name']
-        })
-        .execute([])
+      dw.group({
+        mode: GroupingMode.ONLY_GROUP,
+        flat: false,
+        groupOn: ['dep', 'name']
+      }).execute([])
     }).toThrow(EvalError)
 
     expect(() => {
-      dw
-        .group({
-          mode: GroupingMode.ONLY_GROUP,
-          flat: false,
-          groupOn: ['dep', 'name']
-        })
-        .execute([])
+      dw.group({
+        mode: GroupingMode.ONLY_GROUP,
+        flat: false,
+        groupOn: ['dep', 'name']
+      }).execute([])
     }).toThrowError('Empty data to group not allowed')
   })
 
   it('Should throw error when no data present and aggregate is attempted', () => {
     expect(() => {
-      dw
-        .aggregate({
-          aggr: [Operation.AVERAGE, Operation.SUM],
-          attrs: ['size1'],
-          mode: AggregatorMode.ARRAY_MODE
-        })
-        .execute([])
+      dw.aggregate({
+        aggr: [Operation.AVERAGE, Operation.SUM],
+        attrs: ['size1'],
+        mode: AggregatorMode.ARRAY_MODE
+      }).execute([])
     }).toThrow(EvalError)
 
     expect(() => {
-      dw
-        .aggregate({
-          aggr: [Operation.AVERAGE, Operation.SUM],
-          attrs: ['size1'],
-          mode: AggregatorMode.ARRAY_MODE
-        })
-        .execute([])
+      dw.aggregate({
+        aggr: [Operation.AVERAGE, Operation.SUM],
+        attrs: ['size1'],
+        mode: AggregatorMode.ARRAY_MODE
+      }).execute([])
     }).toThrowError('Empty data to aggregate not allowed')
   })
 
   it('Should throw error when no grouping attribute present and group is attempted (Group Only)', () => {
     expect(() => {
-      dw
-        .group({
-          mode: GroupingMode.ONLY_GROUP,
-          flat: false,
-          groupOn: []
-        })
-        .execute(sampleData)
+      dw.group({
+        mode: GroupingMode.ONLY_GROUP,
+        flat: false,
+        groupOn: []
+      }).execute(sampleData)
     }).toThrow(EvalError)
 
     expect(() => {
-      dw
-        .group({
-          mode: GroupingMode.ONLY_GROUP,
-          flat: false,
-          groupOn: []
-        })
-        .execute(sampleData)
+      dw.group({
+        mode: GroupingMode.ONLY_GROUP,
+        flat: false,
+        groupOn: []
+      }).execute(sampleData)
     }).toThrowError('Empty parameter to group not allowed')
   })
 
   it('Should throw error when no grouping attribute present and group is attempted (Group Sort Mode)', () => {
     expect(() => {
-      dw
-        .group({
-          mode: GroupingMode.GROUP_SORT,
-          flat: false,
-          groupingOptions: []
-        })
-        .execute(sampleData)
+      dw.group({
+        mode: GroupingMode.GROUP_SORT,
+        flat: false,
+        groupingOptions: []
+      }).execute(sampleData)
     }).toThrow(EvalError)
 
     expect(() => {
-      dw
-        .group({
-          mode: GroupingMode.GROUP_SORT,
-          flat: false,
-          groupingOptions: []
-        })
-        .execute(sampleData)
+      dw.group({
+        mode: GroupingMode.GROUP_SORT,
+        flat: false,
+        groupingOptions: []
+      }).execute(sampleData)
     }).toThrowError('Empty parameter to group not allowed')
   })
 
   it('Should throw error when invalid group mode is supplied and group is attempted', () => {
     expect(() => {
-      dw
-        .group({
-          mode: 5,
-          flat: false,
-          groupingOptions: []
-        })
-        .execute(sampleData)
+      dw.group({
+        mode: 5,
+        flat: false,
+        groupingOptions: []
+      }).execute(sampleData)
     }).toThrow(EvalError)
 
     expect(() => {
-      dw
-        .group({
-          mode: 5,
-          flat: false,
-          groupingOptions: []
-        })
-        .execute(sampleData)
+      dw.group({
+        mode: 5,
+        flat: false,
+        groupingOptions: []
+      }).execute(sampleData)
     }).toThrowError('InValid Grouping Mode')
   })
 
   it('Should throw error when invalid aggregate is attempted', () => {
     expect(() => {
-      dw
-        .aggregate({
-          aggr: [99, Operation.SUM],
-          attrs: ['size1'],
-          mode: AggregatorMode.ARRAY_MODE
-        })
-        .execute(sampleData)
+      dw.aggregate({
+        aggr: [99, Operation.SUM],
+        attrs: ['size1'],
+        mode: AggregatorMode.ARRAY_MODE
+      }).execute(sampleData)
     }).toThrow(TypeError)
 
     expect(() => {
-      dw
-        .aggregate({
-          aggr: [99, Operation.SUM],
-          attrs: ['size1'],
-          mode: AggregatorMode.ARRAY_MODE
-        })
-        .execute(sampleData)
+      dw.aggregate({
+        aggr: [99, Operation.SUM],
+        attrs: ['size1'],
+        mode: AggregatorMode.ARRAY_MODE
+      }).execute(sampleData)
     }).toThrowError('Unsupported Operation')
   })
 
   it('Should throw error when empty parameter in aggregate is attempted', () => {
     expect(() => {
-      dw
-        .aggregate({
-          aggr: [Operation.SUM],
-          attrs: [],
-          mode: AggregatorMode.ARRAY_MODE
-        })
-        .execute(sampleData)
+      dw.aggregate({
+        aggr: [Operation.SUM],
+        attrs: [],
+        mode: AggregatorMode.ARRAY_MODE
+      }).execute(sampleData)
     }).toThrow(EvalError)
 
     expect(() => {
-      dw
-        .aggregate({
-          aggr: [Operation.SUM],
-          attrs: [],
-          mode: AggregatorMode.ARRAY_MODE
-        })
-        .execute(sampleData)
+      dw.aggregate({
+        aggr: [Operation.SUM],
+        attrs: [],
+        mode: AggregatorMode.ARRAY_MODE
+      }).execute(sampleData)
     }).toThrowError('Must give one attribute when using Array mode')
   })
 
   it('Should throw error when empty aggregator in aggregate is attempted', () => {
     expect(() => {
-      dw
-        .aggregate({
-          aggr: [],
-          attrs: ['size1'],
-          mode: AggregatorMode.ARRAY_MODE
-        })
-        .execute(sampleData)
+      dw.aggregate({
+        aggr: [],
+        attrs: ['size1'],
+        mode: AggregatorMode.ARRAY_MODE
+      }).execute(sampleData)
     }).toThrow(EvalError)
 
     expect(() => {
-      dw
-        .aggregate({
-          aggr: [],
-          attrs: ['size1'],
-          mode: AggregatorMode.ARRAY_MODE
-        })
-        .execute(sampleData)
+      dw.aggregate({
+        aggr: [],
+        attrs: ['size1'],
+        mode: AggregatorMode.ARRAY_MODE
+      }).execute(sampleData)
     }).toThrowError('Must give one aggregator when using Array mode')
   })
 })
