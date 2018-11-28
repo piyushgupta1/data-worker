@@ -10,7 +10,7 @@
         "statistics",
         "json"
     ],
-    "main": "dist/dist/data-worker.umd.js",
+    "main": "dist/data-worker.umd.js",
     "typings": "dist/types/data-worker.d.ts",
     "files": [
         "dist"
