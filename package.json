@@ -127,7 +127,7 @@
         "prompt": "^1.0.0",
         "replace-in-file": "^4.1.1",
         "rimraf": "^2.6.3",
-        "semantic-release": "^15.13.18",
+        "semantic-release": "^16.0.0",
         "ts-jest": "^24.0.2",
         "ts-loader": "^6.0.4",
         "ts-node": "^8.3.0",
