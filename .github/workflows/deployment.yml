@@ -1,0 +1,39 @@
+name: Deployment
+
+on:
+  workflow_call:
+    inputs:
+      approval:
+        description: 'Should we release a version to NPM?'
+        default: 'Yes'
+        required: true
+        type: boolean
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment: main
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v1
+
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '16'
+    
+    - name: Install Node Modules
+      run: npm ci
+    
+    - name: Run Test Cases and Build
+      run: npm run test:prod
+    
+    - name: Build Prod Version
+      run: npm run build
+    
+    - name: Publish
+        run: |
+          npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
+          npm publish --ignore-scripts
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

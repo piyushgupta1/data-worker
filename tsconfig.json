@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "moduleResolution": "node",
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
         "lib": ["es2015", "es2016", "es2017", "dom"],
         "strict": true,
@@ -10,6 +10,7 @@
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
+        "resolveJsonModule": true,
         "declarationDir": "dist/types",
         "outDir": "dist/es",
         "typeRoots": [
@@ -18,7 +19,8 @@
         "noImplicitAny": true,
         "strictNullChecks": true,
         "noImplicitThis": true,
-        "alwaysStrict": true
+        "alwaysStrict": true,
+        "isolatedModules": true
     },
     "include": [
         "src"

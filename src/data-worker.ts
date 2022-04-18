@@ -1,53 +1,48 @@
-import { AggregatorMode, GroupingMode, Operation, SortingMode } from './@enums/enum'
+import { AggregatorMode, GroupingMode, Operation, SortingMode } from "./@enums/enum";
 import {
   IAggregatorArrayModeInput,
-  IAggregatorMapModeInput
-} from './@interfaces/aggregator-interface'
+  IAggregatorMapModeInput,
+} from "./@interfaces/aggregator-interface";
 import {
   IDataWorker,
   IDataWorkerBase,
-  IFunctionWithArgs
-} from './@interfaces/data-worker-interface'
-import { IGroupOnlyMode, IGroupSortingMode } from './@interfaces/group-interface'
-import { IAggregateInterface, IExecute, IGroupInterface } from './@types/types'
-import _aggregate from './main/aggregate'
-import _group from './main/group'
+  IFunctionWithArgs,
+} from "./@interfaces/data-worker-interface";
+import { IGroupOnlyMode, IGroupSortingMode } from "./@interfaces/group-interface";
+import { IAggregateInterface, IExecute, IGroupInterface, IOptionType } from "./@types/types";
+import _aggregate from "./main/aggregate";
+import _group from "./main/group";
 
-let groupBy: IGroupInterface
-let aggregateBy: IAggregateInterface
-let complete: IExecute
-let functionArray: IFunctionWithArgs[] = []
+const functionArray: IFunctionWithArgs<IOptionType>[] = [];
 
-groupBy = (options: IGroupOnlyMode | IGroupSortingMode): IDataWorker => {
-  functionArray.push({ func: _group, args: [options] })
-  return dw
-}
+const groupBy: IGroupInterface = (options: IGroupOnlyMode | IGroupSortingMode): IDataWorker => {
+  functionArray.push({ func: _group, args: options });
+  return dw;
+};
 
-aggregateBy = (
+const aggregateBy: IAggregateInterface = (
   aggregatorOptions: IAggregatorArrayModeInput | IAggregatorMapModeInput
 ): IDataWorker => {
-  functionArray.push({ func: _aggregate, args: [aggregatorOptions] })
-  return dw
-}
+  functionArray.push({ func: _aggregate, args: aggregatorOptions });
+  return dw;
+};
 
-complete = (inputData: any[]) => {
-  let baseData: IDataWorkerBase = { result: inputData, misc: {} }
-  try {
-    functionArray.forEach(oneFunc => {
-      baseData = oneFunc.func(baseData, ...oneFunc.args)
-    })
-  } catch (error) {
-    throw error
-  } finally {
-    functionArray = []
+const complete: IExecute = (inputData: unknown[]) => {
+  let baseData: IDataWorkerBase = { source: inputData, result: [], misc: {} };
+  while (functionArray.length > 0) {
+    const oneFunc = functionArray.shift();
+    if (oneFunc) {
+      baseData = oneFunc.func(baseData, oneFunc.args);
+    }
   }
-  return baseData.result
-}
-const dw: IDataWorker = { group: groupBy, aggregate: aggregateBy, execute: complete }
+  return baseData.result;
+};
 
-export { dw }
-export { IAggregatorArrayModeInput, IAggregatorMapModeInput }
-export { IDataWorker, IDataWorkerBase, IFunctionWithArgs }
-export { IGroupOnlyMode, IGroupSortingMode }
-export { IAggregateInterface, IExecute, IGroupInterface }
-export { GroupingMode, AggregatorMode, SortingMode, Operation }
+const dw: IDataWorker = { group: groupBy, aggregate: aggregateBy, execute: complete };
+
+export { dw };
+export { GroupingMode, AggregatorMode, SortingMode, Operation };
+export type { IAggregatorArrayModeInput, IAggregatorMapModeInput };
+export type { IDataWorker, IDataWorkerBase, IFunctionWithArgs };
+export type { IGroupOnlyMode, IGroupSortingMode };
+export type { IAggregateInterface, IExecute, IGroupInterface };
