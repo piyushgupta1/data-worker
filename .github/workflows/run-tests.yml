@@ -1,0 +1,23 @@
+name: Run tests
+
+on: [push]
+
+jobs:  
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['12', '14', '16', '17']
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v1
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Node Modules
+      run: npm install
+    
+    - name: Run Test Cases
+      run: npm run test
